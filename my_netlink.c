@@ -1,7 +1,7 @@
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/slab.h>
-#include <asm/uaccess.h>
+#include <linux/uaccess.h>
 
 #include <linux/sched.h>
 #include <linux/netlink.h>
@@ -18,7 +18,7 @@ static struct sock *nl_sock;
 
 static void input(struct sk_buff *sk);
 
-const static struct netlink_kernel_cfg net_cfg = {
+static const struct netlink_kernel_cfg net_cfg = {
 	.input = input,
 };
 
@@ -51,7 +51,7 @@ static void input(struct sk_buff *skb)
 	memcpy(NLMSG_DATA(nlh), &data, msg_size);
 	res = nlmsg_unicast(nl_sock, skb_out, pid);
 	if (res < 0)
-	pr_info("Error while sending back to user\n");
+		pr_info("Error while sending back to user\n");
 }
 
 static int __init nl_init(void)
